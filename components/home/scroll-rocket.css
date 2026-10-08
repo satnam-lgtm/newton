@@ -1,0 +1,124 @@
+/* The rocket that flies down the reflowed home page on phones and tablets. */
+
+.rocketTrack {
+  position: relative;
+}
+
+/* Sits over the whole document, under the header, and never takes a tap. */
+.rocketLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.rocketPathSvg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: visible;
+}
+
+/* The craft is translated to a point on the path; its own box is centred on
+   that point, so `translate` needs no extra offset maths in the engine. */
+.rocketCraft {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--craft-w, 70px);
+  height: var(--craft-h, 110px);
+  /* Centred on its point on the path, so the engine translates without
+     needing to know the craft's size. */
+  margin: calc(var(--craft-h, 110px) / -2) 0 0 calc(var(--craft-w, 70px) / -2);
+  will-change: transform;
+}
+
+.rocketArt {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: var(--craft-w, 70px);
+  height: var(--craft-h, 110px);
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+@media (min-width: 640px) {
+  .rocketLayer {
+    --craft-w: 86px;
+    --craft-h: 135px;
+  }
+}
+
+.rocketFlame {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--craft-h, 110px) * 0.93);
+  width: 60px;
+  height: 140px;
+  margin-left: -30px;
+  transform-origin: 50% 0;
+  transform: scale(0.34, 0.3);
+  filter: drop-shadow(0 0 8px rgb(255 106 26 / 0.6));
+}
+.rocketFlame svg {
+  display: block;
+  transform-origin: 50% 0;
+  animation: rocketFlicker 0.13s linear infinite alternate;
+}
+
+/* Progress readout, pinned bottom-left clear of the thumb reach. */
+.rocketHud {
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 13px 7px 8px;
+  border-radius: 999px;
+  background: var(--hud);
+  border: 1px solid var(--glassb);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 12px 30px var(--shadow);
+  pointer-events: none;
+}
+
+.rocketHudText {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+}
+.rocketHudText strong {
+  font-weight: 500;
+  font-size: 12px;
+  color: var(--fg);
+}
+
+@keyframes rocketFlicker {
+  0% {
+    transform: scale(1, 1);
+  }
+  35% {
+    transform: scale(0.9, 1.1);
+  }
+  70% {
+    transform: scale(1.06, 0.92);
+  }
+  100% {
+    transform: scale(0.96, 1.06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rocketFlame svg {
+    animation: none;
+  }
+}

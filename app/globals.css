@@ -1,0 +1,424 @@
+@import "tailwindcss";
+
+/* ───────────────────────────────────────────────────────────────
+   Newton Infotech — design tokens
+   Values ported 1:1 from the "Full flight" design reference.
+   ─────────────────────────────────────────────────────────────── */
+
+@theme {
+  --font-display: var(--font-space-grotesk), "Space Grotesk", sans-serif;
+  --font-body: var(--font-inter), "Inter", sans-serif;
+  --font-mono: var(--font-jetbrains), "JetBrains Mono", monospace;
+  --font-brand: var(--font-unbounded), "Unbounded", sans-serif;
+
+  --color-yellow: #ffd400;
+  --color-yellow-deep: #e0b800;
+  --color-orange: #ff6a1a;
+  --color-blue: #1e6bff;
+  --color-blue-light: #6fa0ff;
+  --color-blue-deep: #0b2e7a;
+  --color-green: #2bd576;
+  --color-green-deep: #1fa35b;
+  --color-ink: #0a0a0b;
+  --color-paper: #f5f5f2;
+}
+
+/* Theme scopes. `.night` / `.day` carry every surface value so the whole
+   tree can cross-fade by swapping one class on <html>. */
+.night {
+  --bg: #0a0a0b;
+  --bg2: #101013;
+  --fg: #f5f5f2;
+  --muted: #8a8a8f;
+  --soft: #c9c9cc;
+  --line: rgb(245 245 242 / 0.08);
+  --line2: rgb(245 245 242 / 0.16);
+  --card: #141417;
+  --cardb: rgb(245 245 242 / 0.09);
+  --glass: rgb(245 245 242 / 0.06);
+  --glassb: rgb(245 245 242 / 0.12);
+  --hud: rgb(14 14 16 / 0.84);
+  --nav: rgb(10 10 11 / 0.78);
+  --acct: #ffd400;
+  --grid: rgb(245 245 242 / 0.04);
+  --gridd: rgb(245 245 242 / 0.16);
+  --eq: rgb(245 245 242 / 0.09);
+  --hl: transparent;
+  --wordc: #ffd400;
+  --cur: #ffd400;
+  --starop: 1;
+  --vig: rgb(5 5 6 / 0.75);
+  --shadow: rgb(0 0 0 / 0.5);
+  --track: #2b2b31;
+  color-scheme: dark;
+}
+
+.day {
+  --bg: #f5f5f2;
+  --bg2: #ebeae4;
+  --fg: #0a0a0b;
+  --muted: #55555a;
+  --soft: #3a3a3f;
+  --line: rgb(10 10 11 / 0.08);
+  --line2: rgb(10 10 11 / 0.18);
+  --card: #ffffff;
+  --cardb: #e2e1db;
+  --glass: rgb(255 255 255 / 0.72);
+  --glassb: rgb(10 10 11 / 0.08);
+  --hud: rgb(255 255 255 / 0.88);
+  --nav: rgb(245 245 242 / 0.82);
+  --acct: #7a5c00;
+  --grid: rgb(10 10 11 / 0.05);
+  --gridd: rgb(10 10 11 / 0.14);
+  --eq: rgb(10 10 11 / 0.08);
+  --hl: #ffd400;
+  --wordc: #0a0a0b;
+  --cur: #0a0a0b;
+  --starop: 0;
+  --vig: rgb(235 234 228 / 0);
+  --shadow: rgb(10 10 11 / 0.12);
+  --track: #d8d7d1;
+  color-scheme: light;
+}
+
+html {
+  background: #0a0a0b;
+}
+.day,
+html:has(.day) {
+  background: #f5f5f2;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  transition:
+    background 0.5s,
+    color 0.5s;
+}
+
+/* Element-level defaults sit in @layer base so component classes can override
+   them. An unlayered rule beats every layered one regardless of specificity,
+   which would otherwise let `a { color: inherit }` win over a button's own
+   colour and paint white text on a yellow button. */
+@layer base {
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  a:hover {
+    color: var(--acct);
+  }
+
+  ::selection {
+    background: var(--color-yellow);
+    color: #0a0a0b;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-yellow);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+}
+
+/* Component classes live in a cascade layer so Tailwind's own utilities,
+   which sit in @layer utilities, can still override them in markup
+   (an unlayered rule would otherwise beat every utility). */
+@layer components {
+  /* ── Shared type scale ───────────────────────────────────────── */
+  .t-h1,
+  .t-h2,
+  .t-h3 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+  }
+  .t-h1 {
+    letter-spacing: -0.05em;
+    line-height: 0.9;
+  }
+  .t-h2 {
+    letter-spacing: -0.045em;
+    line-height: 0.95;
+  }
+  .t-h3 {
+    letter-spacing: -0.02em;
+  }
+  .t-lead {
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.55;
+    color: var(--muted);
+  }
+  .t-small {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+  .t-mono {
+    font-family: var(--font-mono);
+    letter-spacing: 0.14em;
+  }
+  .t-acc {
+    color: var(--acct);
+  }
+
+  /* ── Shared surfaces ─────────────────────────────────────────── */
+  .u-card {
+    background: var(--card);
+    border: 1px solid var(--cardb);
+    border-radius: 18px;
+    box-sizing: border-box;
+    transition:
+      background 0.5s,
+      border-color 0.5s;
+  }
+  .u-tile {
+    transition:
+      transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+      border-color 0.3s;
+  }
+  .u-tile:hover {
+    transform: translateY(-4px);
+    border-color: var(--color-yellow);
+  }
+  .u-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid var(--line2);
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 13px;
+    color: var(--soft);
+  }
+  .u-ph {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    border: 1px dashed var(--line2);
+    border-radius: 4px;
+    padding: 3px 6px;
+    color: var(--muted);
+  }
+  .u-glass {
+    background: var(--glass);
+    border: 1px solid var(--glassb);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 24px 60px var(--shadow);
+  }
+
+  /* ── Buttons ─────────────────────────────────────────────────── */
+  .u-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    box-sizing: border-box;
+    border-radius: 999px;
+    border: 0;
+    font-family: inherit;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .u-btn-primary,
+  .u-btn-primary:hover,
+  .u-btn-primary:focus,
+  .u-btn-primary:visited {
+    /* Yellow is a light surface in both themes, so the label is always ink. */
+    color: #0a0a0b;
+  }
+  .u-btn-primary {
+    background: var(--color-yellow);
+    transition:
+      box-shadow 0.35s,
+      transform 0.35s;
+  }
+  .u-btn-primary:hover {
+    color: #0a0a0b;
+    box-shadow:
+      0 0 0 6px rgb(255 212 0 / 0.16),
+      0 14px 50px rgb(255 212 0 / 0.45);
+    transform: translateY(-1px);
+  }
+  .u-btn-ghost {
+    background: transparent;
+    border: 1px solid var(--line2);
+    color: var(--fg);
+    font-weight: 500;
+    transition:
+      border-color 0.3s,
+      background 0.3s;
+  }
+  .u-btn-ghost:hover {
+    border-color: var(--fg);
+    color: var(--fg);
+  }
+  .u-btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* ── Forms ───────────────────────────────────────────────────── */
+  .u-field {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: var(--bg);
+    border: 1px solid var(--line2);
+    color: var(--fg);
+    font: inherit;
+    font-size: 15px;
+    transition:
+      border-color 0.25s,
+      box-shadow 0.25s;
+  }
+  .u-field::placeholder {
+    color: var(--muted);
+  }
+  .u-field:focus {
+    outline: none;
+    border-color: var(--color-yellow);
+    box-shadow: 0 0 0 4px rgb(255 212 0 / 0.14);
+  }
+  .u-field[aria-invalid="true"] {
+    border-color: #ff5c5c;
+  }
+  .u-label {
+    display: block;
+    margin-bottom: 8px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    color: var(--muted);
+  }
+  /* ── Standalone-page chrome ──────────────────────────────────── */
+  .toggle-lite {
+    width: 46px;
+    height: 46px;
+    flex: none;
+    border-radius: 50%;
+    border: 1px solid var(--line2);
+    background: transparent;
+    color: var(--fg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    transition:
+      border-color 0.3s,
+      transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .toggle-lite:hover {
+    border-color: var(--fg);
+  }
+
+  /* The mono eyebrow above every page and section heading. */
+  .u-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+  }
+  .u-kicker::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--color-yellow);
+  }
+
+  /* Long-form body copy for blog posts and policies. */
+  .u-prose {
+    color: var(--soft);
+    font-size: 17px;
+    line-height: 1.7;
+  }
+  .u-prose > * + * {
+    margin-top: 1.35em;
+  }
+  .u-prose h2 {
+    margin-top: 2.2em;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 26px;
+    letter-spacing: -0.03em;
+    color: var(--fg);
+  }
+  .u-prose h3 {
+    margin-top: 1.8em;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 20px;
+    letter-spacing: -0.02em;
+    color: var(--fg);
+  }
+  .u-prose ul {
+    margin-left: 1.1em;
+    list-style: disc;
+  }
+  .u-prose li + li {
+    margin-top: 0.5em;
+  }
+  .u-prose a {
+    color: var(--acct);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .u-prose strong {
+    color: var(--fg);
+    font-weight: 600;
+  }
+
+  /* A faint blueprint grid used as a page-hero backdrop. */
+  .u-grid-bg {
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 80px 80px;
+  }
+
+  .u-hr {
+    height: 1px;
+    border: 0;
+    background: var(--line);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Platform marquee on the responsive home page. */
+@layer components {
+  .marqueeStrip {
+    animation: marqueeStrip 40s linear infinite;
+  }
+}
+@keyframes marqueeStrip {
+  to {
+    transform: translateX(-50%);
+  }
+}
